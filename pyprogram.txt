@@ -1,0 +1,15 @@
+def f():
+    a = 0
+
+    b = True
+
+    main()
+
+def fdfgdf():
+    a = True
+
+
+
+    string = "sdfdsf"
+    degth()
+      
