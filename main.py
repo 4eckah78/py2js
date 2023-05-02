@@ -2,9 +2,7 @@ import sys
 from antlr4 import *
 from py2jsLexer import py2jsLexer
 from py2jsParser import py2jsParser
-from py2jsListener import py2jsListener
 from py2jsVisitor import *
-
 
 
 def getIdentation(ctxLevel):
@@ -28,7 +26,7 @@ class Visitor(py2jsVisitor):
         jsMethodHeader = getIdentation(self.contextLevel) + self.visit(ctx.methodHeader())
         self.contextLevel += 1
         jsMethodBody = self.visit(ctx.methodBody())
-        return f"{jsMethodHeader}\n{jsMethodBody} \n}}"  
+        return f"{jsMethodHeader}\n{jsMethodBody} \n}}\n"  
     
     def visitMethodBody(self, ctx: py2jsParser.MethodBodyContext):
         jsLines = []
@@ -37,8 +35,14 @@ class Visitor(py2jsVisitor):
         self.contextLevel -= 1
         return '\n'.join(jsLines)
     
+    def visitCommentText(self, ctx: py2jsParser.CommentTextContext):
+        return f"// {ctx.getText().lstrip(' #')}"
+    
     def visitStatement(self, ctx: py2jsParser.StatementContext):
-        return self.visit(ctx.emdeddedStatement())
+        js_str = ""
+        if ctx.commentText():
+            js_str = f" // {ctx.commentText().getText().lstrip(' #')}"
+        return self.visit(ctx.emdeddedStatement()) + js_str
     
     def visitMethodHeader(self, ctx: py2jsParser.MethodHeaderContext):
         return f"function {ctx.methodName().getText()}() {{"
@@ -66,7 +70,7 @@ def main(argv):
     tree = parser.start()
     visitor = Visitor()
     js_code = visitor.visit(tree)
-    
+    print(tree.toStringTree(parser.ruleNames))
     with open("jsprogram.js", "w") as f:
         f.write(js_code)
     

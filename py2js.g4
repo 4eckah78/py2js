@@ -6,12 +6,13 @@ grammar py2js;
 start                       : methodDeclarations? | EOF ;
 methodDeclarations          : methodDeclaration+ ;
 methodDeclaration           : methodHeader methodBody ;
-methodHeader                : 'def' methodName '(' ')' ':' NEWLINE*;
+methodHeader                : 'def' methodName '(' ')' ':' NEWLINE* ; 
 methodBody                  : statement* ;
-statement                   : emdeddedStatement NEWLINE*;
+statement                   : emdeddedStatement commentText? NEWLINE* ;
 emdeddedStatement                  
                             : localVariableDeclaration
                             | methodCall
+                            | commentText
                              ;
 
 localVariableDeclaration    : variableName '=' variableValue ;
@@ -23,6 +24,7 @@ variableValue
                             | INT
                             | STRING
                             ;
+commentText                 : COMMENT ;
 
 /*
  * Lexer Rules
@@ -31,8 +33,8 @@ variableValue
 INT                         : ('-')? [0-9]+;
 BOOL                        : 'True' | 'False' ;
 STRING                      : '"' .*? '"' ;
-WORD                        : [a-zA-Z]+ ;
-WHITESPACE                  : (' ')+ -> skip;
+WORD                        : [a-zA-Z_] [a-zA-Z0-9_]* ;
+WHITESPACE                  : (' ')+ -> skip ;
 NEWLINE                     : ('\r'? '\n' | '\r')+ ;
+COMMENT                     : '#' ~[\r\n\f]* ;
 ANY                         : . ;       
-IDENT                       : '\t' ;

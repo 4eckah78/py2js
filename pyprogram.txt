@@ -1,15 +1,10 @@
-def f():
-    a = 0
-
+def __f123_get():
+    a = 0 # hello
     b = True
-
-    main()
+    # some comment
+    _main()
 
 def fdfgdf():
     a = True
-
-
-
     string = "sdfdsf"
     degth()
-      
