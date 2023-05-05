@@ -1,6 +1,11 @@
 # py2js
 ## Translator from Python to JavaScript with Antlr4
 
+- install dependences
+```bash
+pip install -r requirements.txt
+```
+
 
 - To use antlr4 run this command: 
 
